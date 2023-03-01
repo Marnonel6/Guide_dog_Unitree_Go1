@@ -10,6 +10,29 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(std_msgs REQUIRED)
+find_package(std_srvs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(rosidl_default_generators REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+
+if(NOT CMAKE_CROSSCOMPILING)
+    # CMake also has the ability to generate doxygen documentation
+    find_package(Doxygen)
+    set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md) # Use the readme in your doxygen docs
+    doxygen_add_docs(doxygen src/ README.md ALL)
+endif()
+
+# rosidl_generate_interfaces(${PROJECT_NAME}_srv
+#   "srv/Teleport.srv"
+#   LIBRARY_NAME ${PROJECT_NAME}
+# )
+
+# rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}_srv "rosidl_typesupport_cpp")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -22,5 +45,21 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
+
+add_executable(voice_control src/voice_control.cpp)
+ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav_msgs sensor_msgs)
+# target_link_libraries(voice_control turtlelib::turtlelib "${cpp_typesupport_target}")
+
+install(TARGETS
+  voice_control
+  DESTINATION lib/${PROJECT_NAME}
+)
+
+# Install launch files.
+install(DIRECTORY
+  launch
+  config
+  DESTINATION share/${PROJECT_NAME}/
+)
 
 ament_package()
