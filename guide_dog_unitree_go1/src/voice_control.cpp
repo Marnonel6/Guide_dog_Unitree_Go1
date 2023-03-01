@@ -26,6 +26,7 @@
 #include "std_srvs/srv/detail/empty__struct.hpp"
 #include "std_srvs/srv/detail/set_bool__struct.hpp"
 #include "std_srvs/srv/set_bool.hpp"
+#include "geometry_msgs/msg/twist.hpp"
 
 
 using namespace std::chrono_literals;
@@ -41,6 +42,10 @@ public:
     voice_control()
     : Node("voice_control")
     {
+        // Publisher
+        cmd_vel_publisher_ = create_publisher<geometry_msgs::msg::Twist>(
+          "cmd_vel", 10);
+
         // Subscribers
         voice_command_subscriber_ = create_subscription<std_msgs::msg::String>(
           "voice_command", 10, std::bind(
@@ -48,11 +53,6 @@ public:
             this, std::placeholders::_1));
 
         //Services
-        // stand_up_client_ = create_client<std_srvs::srv::Empty>(
-        //   "stand_up",
-        //   std::bind(&voice_control::stand_up_callback, this,
-        //             std::placeholders::_1, std::placeholders::_2));
-
         stand_up_client_ = create_client<std_srvs::srv::Empty>("stand_up");
         lay_down_client_ = create_client<std_srvs::srv::Empty>("lay_down");
     }
@@ -61,9 +61,11 @@ private:
     // Variables
     bool service_done_stand_ = false; // inspired from action client c++ code
     bool service_done_lay_ = false; // inspired from action client c++ code
+    geometry_msgs::msg::Twist body_twist_;
     // auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
 
     // Create objects
+    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
     rclcpp::Subscription<std_msgs::msg::String>::SharedPtr voice_command_subscriber_;
     rclcpp::Client<std_srvs::srv::Empty>::SharedPtr stand_up_client_;
     rclcpp::Client<std_srvs::srv::Empty>::SharedPtr lay_down_client_;
@@ -85,6 +87,12 @@ private:
             auto result_future_lay = lay_down_client_->async_send_request(
                 std::make_shared<std_srvs::srv::Empty::Request>(), std::bind(&voice_control::response_callback_lay, this,
                                    std::placeholders::_1));
+        }
+        else if (msg.data == "walk")
+        {
+            body_twist_.linear.x = 0.1;
+            body_twist_.angular.z = 0.0;
+            cmd_vel_publisher_->publish(body_twist_);
         }
     }
 

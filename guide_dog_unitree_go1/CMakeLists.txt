@@ -47,7 +47,7 @@ if(BUILD_TESTING)
 endif()
 
 add_executable(voice_control src/voice_control.cpp)
-ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav_msgs sensor_msgs)
+ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav_msgs sensor_msgs geometry_msgs)
 # target_link_libraries(voice_control turtlelib::turtlelib "${cpp_typesupport_target}")
 
 install(TARGETS
