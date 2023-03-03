@@ -119,11 +119,6 @@ class Listen(Node):
             recorder = PvRecorder(device_index=-1, frame_length=self._picovoice.frame_length)
             recorder.start()
 
-            # if self.output_path is not None:
-            #     wav_file = wave.open(self.output_path, "w")
-            #     # noinspection PyTypeChecker
-            #     wav_file.setparams((1, 2, 16000, 512, "NONE", "NONE"))
-
             print("Using device: %s" % recorder.selected_device)
             print('[Listening ...]')
 
@@ -159,8 +154,6 @@ class Listen(Node):
         """ 
         Timer Callback
         """
-
-        # print(f"{self.keyword_path}")
 
         try:
             self._picovoice = Picovoice(
