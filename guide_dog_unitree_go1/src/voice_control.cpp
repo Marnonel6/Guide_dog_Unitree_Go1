@@ -76,7 +76,7 @@ private:
     {
         RCLCPP_ERROR_STREAM(get_logger(), "\n Command \n" << msg.data);
 
-        if (msg.data == "stand")
+        if (msg.data == "stand") // CHANGE TO UP ON NEW RHINO FILE DOWNLOAD
         {
             auto result_future_stand = stand_up_client_->async_send_request(
                 std::make_shared<std_srvs::srv::Empty::Request>(), std::bind(&voice_control::response_callback_stand, this,
@@ -90,7 +90,7 @@ private:
         }
         else if (msg.data == "walk")
         {
-            body_twist_.linear.x = 0.1;
+            body_twist_.linear.x = 0.4;
             body_twist_.angular.z = 0.0;
             cmd_vel_publisher_->publish(body_twist_);
         }
