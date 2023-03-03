@@ -23,6 +23,13 @@ def generate_launch_description():
             description='Enables voice control of unitree Go1'
         ),
 
+        DeclareLaunchArgument(
+            name='use_listen_talk',
+            default_value='true',
+            choices=['true','false'],
+            description='Enables voice to text commands and audio playback from unitree Go1'
+        ),
+
         Node(
             package='guide_dog_unitree_go1',
             executable='voice_control',
@@ -38,7 +45,7 @@ def generate_launch_description():
                     'listen_talk.launch.py'
                 ])
             ),
-            # condition=IfCondition(LaunchConfiguration('use_nav2')),
+            condition=IfCondition(LaunchConfiguration('use_listen_talk')),
         ),
 
         IncludeLaunchDescription(
