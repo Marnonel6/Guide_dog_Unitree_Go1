@@ -33,6 +33,17 @@ def generate_launch_description():
         IncludeLaunchDescription(
             PythonLaunchDescriptionSource(
                 PathJoinSubstitution([
+                    FindPackageShare('listen_talk_ros2'),
+                    # 'launch',
+                    'listen_talk.launch.py'
+                ])
+            ),
+            # condition=IfCondition(LaunchConfiguration('use_nav2')),
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
                     FindPackageShare('unitree_nav'),
                     'launch',
                     'unitree_nav.launch.py'
