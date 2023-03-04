@@ -185,6 +185,10 @@ class Listen(Node):
                 endpoint_duration_sec=1.0,
                 require_endpoint=True)
             
+
+            self.voice_command.data = "willie greet"
+            self.pub_voice_command.publish(self.voice_command)
+            
             self.run()
             
             PicovoiceDemo(

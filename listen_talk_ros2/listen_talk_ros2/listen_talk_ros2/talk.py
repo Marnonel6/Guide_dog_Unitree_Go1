@@ -37,11 +37,14 @@ class Talk(Node):
             "listen_talk_ros2") + "/easter_egg.mp3")
         self.declare_parameter("not_understanding", ament_index_python.get_package_share_directory(
             "listen_talk_ros2") + "/not_understanding.mp3")
+        self.declare_parameter("willie_greet", ament_index_python.get_package_share_directory(
+            "listen_talk_ros2") + "/willie_greet.mp3")
 
         self.bark = self.get_parameter("bark").get_parameter_value().string_value
         self.allan = self.get_parameter("allan").get_parameter_value().string_value
         self.easter_egg = self.get_parameter("easter_egg").get_parameter_value().string_value
         self.not_understanding = self.get_parameter("not_understanding").get_parameter_value().string_value
+        self.willie_greet = self.get_parameter("willie_greet").get_parameter_value().string_value
 
 
         # Publishers, Subscribers, Services and Timer
@@ -67,6 +70,11 @@ class Talk(Node):
         if data.data == "not understanding":
             not_understanding = 'mpg123' + ' ' + self.not_understanding
             os.system(not_understanding)
+
+        if data.data == "willie greet":
+            willie_greet = 'mpg123' + ' ' + self.willie_greet
+            os.system(willie_greet)
+
 
 def main(args=None):
     """ The main() function. """
