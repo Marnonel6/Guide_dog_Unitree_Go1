@@ -12,6 +12,8 @@ setup(
         ('share/' + package_name, ['package.xml', 'launch/listen_talk.launch.py',
                                    'config/Hey-Willie_en_linux_v2_1_0.ppn',
                                    'config/Dog-command_en_linux_v2_1_0.rhn',
+                                    'config/Hey-Willie_en_jetson_v2_1_0.ppn',
+                                   'config/Dog-command_en_jetson_v2_1_0.rhn',
                                    'config/talk.mp3',
                                    'config/German_shepherd_barking.mp3',
                                    'config/allan.mp3',

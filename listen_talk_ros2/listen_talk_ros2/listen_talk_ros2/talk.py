@@ -31,7 +31,14 @@ class Talk(Node):
         # Load .mp3 files from the shared directory as parameters
         self.declare_parameter("bark", ament_index_python.get_package_share_directory(
             "listen_talk_ros2") + "/German_shepherd_barking.mp3")
+        self.declare_parameter("allan", ament_index_python.get_package_share_directory(
+            "listen_talk_ros2") + "/allan.mp3")
+        self.declare_parameter("easter_egg", ament_index_python.get_package_share_directory(
+            "listen_talk_ros2") + "/easter_egg.mp3")
         self.bark = self.get_parameter("bark").get_parameter_value().string_value
+        self.allan = self.get_parameter("allan").get_parameter_value().string_value
+        self.easter_egg = self.get_parameter("easter_egg").get_parameter_value().string_value
+
 
         # Publishers, Subscribers, Services and Timer
         self.sub = self.create_subscription(String, "/voice_command", self.voice_command, 10)
@@ -44,6 +51,14 @@ class Talk(Node):
         if data.data == "bark":
             bark = 'mpg123' + ' ' + self.bark
             os.system(bark)
+
+        if data.data == "allan":
+            allan = 'mpg123' + ' ' + self.allan
+            os.system(allan)
+
+        if data.data == "easter egg":
+            easter_egg = 'mpg123' + ' ' + self.easter_egg
+            os.system(easter_egg)
 
 def main(args=None):
     """ The main() function. """

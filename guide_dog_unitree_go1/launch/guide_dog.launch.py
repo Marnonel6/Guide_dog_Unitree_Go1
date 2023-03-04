@@ -25,7 +25,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             name='use_speech_recognition',
-            default_value='true',
+            default_value='false',
             choices=['true','false'],
             description='Enables voice to text commands and audio playback from unitree Go1'
         ),

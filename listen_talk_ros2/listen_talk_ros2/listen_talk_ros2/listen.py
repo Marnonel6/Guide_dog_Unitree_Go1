@@ -71,18 +71,30 @@ class Listen(Node):
         # self.state = State.RESET # Starts with RESET state
         self.flag_state_stopped = 0 # This is used to log "STOPPING" only once to debug.
 
+        self.declare_parameter("use_jetson_nano", True, ParameterDescriptor(description="Run program on jetson nano, otherwise is linux computer"))
         self.declare_parameter("frequency", 100.0, ParameterDescriptor(description="Timer callback frequency"))
-        self.declare_parameter("keyword_path", ament_index_python.get_package_share_directory(
-            "listen_talk_ros2")+ "/Hey-Willie_en_linux_v2_1_0.ppn")
-        self.declare_parameter("context_path", ament_index_python.get_package_share_directory(
-            "listen_talk_ros2")+ "/Dog-command_en_linux_v2_1_0.rhn")
         self.declare_parameter("access_key", "bz3cScyGLZpi/dcR5/xHDJJ/pCBdswpMGXHL2Djgik7Rn04q54tdYA==", ParameterDescriptor(description="The error tolerance for the waypoint"))
 
-
+        self.use_jetson_nano = self.get_parameter("use_jetson_nano").get_parameter_value().bool_value
         self.frequency = self.get_parameter("frequency").get_parameter_value().double_value
-        self.keyword_path = self.get_parameter("keyword_path").get_parameter_value().string_value
-        self.context_path = self.get_parameter("context_path").get_parameter_value().string_value
         self.access_key = self.get_parameter("access_key").get_parameter_value().string_value
+
+        if (self.use_jetson_nano == False):
+            self.declare_parameter("keyword_path", ament_index_python.get_package_share_directory(
+                "listen_talk_ros2")+ "/Hey-Willie_en_linux_v2_1_0.ppn")
+            self.declare_parameter("context_path", ament_index_python.get_package_share_directory(
+                "listen_talk_ros2")+ "/Dog-command_en_linux_v2_1_0.rhn")
+            self.keyword_path = self.get_parameter("keyword_path").get_parameter_value().string_value
+            self.context_path = self.get_parameter("context_path").get_parameter_value().string_value
+        else:
+            self.declare_parameter("keyword_path", ament_index_python.get_package_share_directory(
+                "listen_talk_ros2")+ "/Hey-Willie_en_jetson_v2_1_0.ppn")
+            self.declare_parameter("context_path", ament_index_python.get_package_share_directory(
+                "listen_talk_ros2")+ "/Dog-command_en_jetson_v2_1_0.rhn")
+            self.keyword_path = self.get_parameter("keyword_path").get_parameter_value().string_value
+            self.context_path = self.get_parameter("context_path").get_parameter_value().string_value
+
+
         self.voice_command = String()
 
 
