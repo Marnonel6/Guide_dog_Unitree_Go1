@@ -122,6 +122,8 @@ class Listen(Node):
 
         else:
             print("I didn't understand the command.\n")
+            self.voice_command.data = "not understanding"
+            self.pub_voice_command.publish(self.voice_command)
 
     def run(self):
         recorder = None
