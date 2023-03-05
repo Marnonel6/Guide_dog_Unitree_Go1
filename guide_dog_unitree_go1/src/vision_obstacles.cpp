@@ -63,8 +63,8 @@ class vision_obstacles : public rclcpp::Node
         // Timer timestep [seconds]
         dt_ = 1.0 / static_cast<double>(rate);
 
-        // Create obstacles
-        create_obstacles_array();
+        // // Create obstacles
+        // create_obstacles_array();
 
         // Publishers
         timestep_publisher_ = create_publisher<std_msgs::msg::UInt64>("~/timestep", 10);
@@ -107,9 +107,13 @@ class vision_obstacles : public rclcpp::Node
         void door_vision_callback(const geometry_msgs::msg::Point & msg)
         {
             x_ = msg.x;
-            y_ = msg.y;
-            z_ = msg.z;
+            // y_ = msg.y;
+            // z_ = msg.z;
+            z_ = msg.y;
+            y_ = msg.z;
             RCLCPP_INFO_STREAM(get_logger(), "Coords" << x_ << y_ << z_);
+
+            create_obstacles_array();
         }
 
 
@@ -133,38 +137,33 @@ class vision_obstacles : public rclcpp::Node
       /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
       void create_obstacles_array()
       {
-        obstacles_ = visualization_msgs::msg::MarkerArray{};
-        visualization_msgs::msg::Marker obstacle_;
-        obstacle_.header.frame_id = "base_link";
-        obstacle_.header.stamp = get_clock()->now();
-        obstacle_.id = 0;
-        obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
-        obstacle_.action = visualization_msgs::msg::Marker::ADD;
-
         if (x_ != 0.0 || y_ != 0.0 || z_ != 0.0)
         {
+            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            visualization_msgs::msg::Marker obstacle_;
+            obstacle_.header.frame_id = "base_link";
+            obstacle_.header.stamp = get_clock()->now();
+            obstacle_.id = 0;
+            obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+            obstacle_.action = visualization_msgs::msg::Marker::ADD;
             obstacle_.pose.position.x = x_;
             obstacle_.pose.position.y = y_;
             obstacle_.pose.position.z = z_;
+            obstacle_.pose.orientation.x = 0.0;
+            obstacle_.pose.orientation.y = 0.0;
+            obstacle_.pose.orientation.z = 0.0;
+            obstacle_.pose.orientation.w = 1.0;
+            obstacle_.scale.x = 0.5;   // Diameter in x
+            obstacle_.scale.y = 0.5;   // Diameter in y
+            obstacle_.scale.z = 0.5;         // Height
+            obstacle_.color.r = 1.0f;
+            obstacle_.color.g = 0.0f;
+            obstacle_.color.b = 0.0f;
+            obstacle_.color.a = 1.0;
+            obstacles_.markers.push_back(obstacle_);
+
+            obstacles_publisher_->publish(obstacles_);
         }
-        else
-        {
-            obstacle_.pose.position.x = 1.0;
-            obstacle_.pose.position.y = 1.0;
-            obstacle_.pose.position.z = 1.0;
-        }
-        obstacle_.pose.orientation.x = 0.0;
-        obstacle_.pose.orientation.y = 0.0;
-        obstacle_.pose.orientation.z = 0.0;
-        obstacle_.pose.orientation.w = 1.0;
-        obstacle_.scale.x = 0.5;   // Diameter in x
-        obstacle_.scale.y = 0.5;   // Diameter in y
-        obstacle_.scale.z = 0.5;         // Height
-        obstacle_.color.r = 1.0f;
-        obstacle_.color.g = 0.0f;
-        obstacle_.color.b = 0.0f;
-        obstacle_.color.a = 1.0;
-        obstacles_.markers.push_back(obstacle_);
 
       }
 
@@ -172,13 +171,12 @@ class vision_obstacles : public rclcpp::Node
       void timer_callback()
       {
         broadcast_red_turtle();
-        create_obstacles_array();
+        // create_obstacles_array();
 
         auto message = std_msgs::msg::UInt64();
         message.data = timestep_++;
 
         timestep_publisher_->publish(message);
-        obstacles_publisher_->publish(obstacles_);
       }
 
       /// \brief Calculate the euclidean distance
