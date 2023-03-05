@@ -19,6 +19,8 @@ find_package(geometry_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(visualization_msgs REQUIRED)
+
 
 if(NOT CMAKE_CROSSCOMPILING)
     # CMake also has the ability to generate doxygen documentation
@@ -48,10 +50,12 @@ endif()
 
 add_executable(voice_control src/voice_control.cpp)
 ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav_msgs sensor_msgs geometry_msgs)
-# target_link_libraries(voice_control turtlelib::turtlelib "${cpp_typesupport_target}")
+add_executable(vision_obstacles src/vision_obstacles.cpp)
+ament_target_dependencies(vision_obstacles rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs nav_msgs sensor_msgs)
 
 install(TARGETS
   voice_control
+  vision_obstacles
   DESTINATION lib/${PROJECT_NAME}
 )
 
