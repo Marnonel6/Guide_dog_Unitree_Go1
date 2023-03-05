@@ -94,6 +94,7 @@ class vision_obstacles : public rclcpp::Node
       double x_ = 0.0;
       double y_ = 0.0;
       double z_ = 0.0;
+      int id_ = 0;
       double dt_ = 0.0; // Nusim Timer
       visualization_msgs::msg::MarkerArray obstacles_;
 
@@ -111,7 +112,7 @@ class vision_obstacles : public rclcpp::Node
             // z_ = msg.z;
             z_ = msg.y;
             y_ = msg.z;
-            RCLCPP_INFO_STREAM(get_logger(), "Coords" << x_ << y_ << z_);
+            RCLCPP_INFO_STREAM(get_logger(), "Coords " << x_ << " "<<  y_ << " " << z_);
 
             create_obstacles_array();
         }
@@ -143,7 +144,7 @@ class vision_obstacles : public rclcpp::Node
             visualization_msgs::msg::Marker obstacle_;
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
-            obstacle_.id = 0;
+            obstacle_.id = id_++;
             obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
             obstacle_.action = visualization_msgs::msg::Marker::ADD;
             obstacle_.pose.position.x = x_;
@@ -160,6 +161,9 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.color.g = 0.0f;
             obstacle_.color.b = 0.0f;
             obstacle_.color.a = 1.0;
+
+            // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
+            obstacle_.lifetime.nanosec = 100000000; // 0.1sec
             obstacles_.markers.push_back(obstacle_);
 
             obstacles_publisher_->publish(obstacles_);
