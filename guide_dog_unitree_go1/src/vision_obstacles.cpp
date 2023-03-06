@@ -145,7 +145,7 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
             obstacle_.id = id_door_++;
-            obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+            obstacle_.type = visualization_msgs::msg::Marker::CUBE;
             obstacle_.action = visualization_msgs::msg::Marker::ADD;
             obstacle_.pose.position.x = x_door_;
             obstacle_.pose.position.y = y_door_;
@@ -154,7 +154,7 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.pose.orientation.y = 0.0;
             obstacle_.pose.orientation.z = 0.0;
             obstacle_.pose.orientation.w = 1.0;
-            obstacle_.scale.x = 0.5;   // Diameter in x
+            obstacle_.scale.x = 0.8;   // Diameter in x
             obstacle_.scale.y = 0.1;   // Diameter in y
             obstacle_.scale.z = 2.0;         // Height
             obstacle_.color.r = 1.0f;
