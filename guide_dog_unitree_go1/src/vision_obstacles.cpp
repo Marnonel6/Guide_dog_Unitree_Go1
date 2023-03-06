@@ -68,15 +68,26 @@ class vision_obstacles : public rclcpp::Node
 
         // Publishers
         timestep_publisher_ = create_publisher<std_msgs::msg::UInt64>("~/timestep", 10);
-        obstacles_publisher_ =
-          create_publisher<visualization_msgs::msg::MarkerArray>("~/obstacles", 10);
+        obstacles_door_publisher_ =
+          create_publisher<visualization_msgs::msg::MarkerArray>("~/doors", 10);
+        obstacles_person_publisher_ =
+          create_publisher<visualization_msgs::msg::MarkerArray>("~/people", 10);
+        obstacles_stairs_publisher_ =
+          create_publisher<visualization_msgs::msg::MarkerArray>("~/stairs", 10);
 
         //Subscribers
         door_vision_subscriber_ = create_subscription<geometry_msgs::msg::Point>(
           "/door", 10, std::bind(
             &vision_obstacles::door_vision_callback, this,
             std::placeholders::_1));
-
+        person_vision_subscriber_ = create_subscription<geometry_msgs::msg::Point>(
+          "/person", 10, std::bind(
+            &vision_obstacles::person_vision_callback, this,
+            std::placeholders::_1));
+        stairs_vision_subscriber_ = create_subscription<geometry_msgs::msg::Point>(
+          "/stairs", 10, std::bind(
+            &vision_obstacles::stairs_vision_callback, this,
+            std::placeholders::_1));
 
         // Initialize the transform broadcaster
         tf_broadcaster_ = std::make_unique<tf2_ros::TransformBroadcaster>(*this);
@@ -91,65 +102,55 @@ class vision_obstacles : public rclcpp::Node
       // Variables
       size_t timestep_;
       std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-      double x_ = 0.0;
-      double y_ = 0.0;
-      double z_ = 0.0;
-      int id_ = 0;
+      double x_door_ = 0.0;
+      double y_door_ = 0.0;
+      double z_door_ = 0.0;
+      int id_door_ = 0;
+      double x_person_ = 0.0;
+      double y_person_ = 0.0;
+      double z_person_ = 0.0;
+      int id_person_ = 0;
+      double x_stairs_ = 0.0;
+      double y_stairs_ = 0.0;
+      double z_stairs_ = 0.0;
+      int id_stairs_ = 0;
       double dt_ = 0.0; // Nusim Timer
       visualization_msgs::msg::MarkerArray obstacles_;
 
       // Create objects
       rclcpp::TimerBase::SharedPtr timer_;
       rclcpp::Publisher<std_msgs::msg::UInt64>::SharedPtr timestep_publisher_;
-      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_publisher_;
+      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_door_publisher_;
+      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_person_publisher_;
+      rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr obstacles_stairs_publisher_;
       rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr door_vision_subscriber_;
+      rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr person_vision_subscriber_;
+      rclcpp::Subscription<geometry_msgs::msg::Point>::SharedPtr stairs_vision_subscriber_;
 
-        /// \brief Subscription callback function for /door object detection topic
-        void door_vision_callback(const geometry_msgs::msg::Point & msg)
+      /// \brief Subscription callback function for /door object detection topic
+      void door_vision_callback(const geometry_msgs::msg::Point & msg)
         {
-            x_ = msg.x;
-            // y_ = msg.y;
-            // z_ = msg.z;
-            z_ = msg.y;
-            y_ = msg.z;
-            RCLCPP_INFO_STREAM(get_logger(), "Coords " << x_ << " "<<  y_ << " " << z_);
+            x_door_ = msg.x;
+            z_door_ = msg.y;
+            y_door_ = msg.z;
+            // RCLCPP_INFO_STREAM(get_logger(), "Coords " << x_door_ << " "<<  z_door_ << " " << y_door_);
 
-            create_obstacles_array();
+            create_door_obstacles_array();
         }
 
-
-      /// \brief (Just for testing) Broadcast the TF frames of the robot
-      void broadcast_red_turtle()
-      {
-        geometry_msgs::msg::TransformStamped t_;
-
-        t_.header.stamp = get_clock()->now();
-        // t_.header.stamp.nanosec += 50000000; // TODO - Fixes the fake obstacle in Rviz
-        t_.header.frame_id = "map";
-        t_.child_frame_id = "base_link";
-        t_.transform.translation.x = 1.0;
-        t_.transform.translation.y = 1.0;
-        t_.transform.translation.z = 0.0;     // Turtle only exists in 2D
-
-        // Send the transformation
-        tf_broadcaster_->sendTransform(t_);
-      }
-
       /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
-      void create_obstacles_array()
+      void create_door_obstacles_array()
       {
-        if (x_ != 0.0 || y_ != 0.0 || z_ != 0.0)
-        {
             obstacles_ = visualization_msgs::msg::MarkerArray{};
             visualization_msgs::msg::Marker obstacle_;
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
-            obstacle_.id = id_++;
+            obstacle_.id = id_door_++;
             obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
             obstacle_.action = visualization_msgs::msg::Marker::ADD;
-            obstacle_.pose.position.x = x_;
-            obstacle_.pose.position.y = y_;
-            obstacle_.pose.position.z = z_;
+            obstacle_.pose.position.x = x_door_;
+            obstacle_.pose.position.y = y_door_;
+            obstacle_.pose.position.z = z_door_;
             obstacle_.pose.orientation.x = 0.0;
             obstacle_.pose.orientation.y = 0.0;
             obstacle_.pose.orientation.z = 0.0;
@@ -166,9 +167,108 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.lifetime.nanosec = 100000000; // 0.1sec
             obstacles_.markers.push_back(obstacle_);
 
-            obstacles_publisher_->publish(obstacles_);
-        }
+            obstacles_door_publisher_->publish(obstacles_);
+      }
 
+      /// \brief Subscription callback function for /door object detection topic
+      void person_vision_callback(const geometry_msgs::msg::Point & msg)
+      {
+          x_person_ = msg.x;
+          z_person_ = msg.y;
+          y_person_ = msg.z;
+          // RCLCPP_INFO_STREAM(get_logger(), "Coords " << x_door_ << " "<<  z_door_ << " " << y_door_);  
+          create_person_obstacles_array();
+      }
+
+      /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
+      void create_person_obstacles_array()
+      {
+            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            visualization_msgs::msg::Marker obstacle_;
+            obstacle_.header.frame_id = "base_link";
+            obstacle_.header.stamp = get_clock()->now();
+            obstacle_.id = id_person_++;
+            obstacle_.type = visualization_msgs::msg::Marker::CYLINDER;
+            obstacle_.action = visualization_msgs::msg::Marker::ADD;
+            obstacle_.pose.position.x = x_person_;
+            obstacle_.pose.position.y = y_person_;
+            obstacle_.pose.position.z = z_person_;
+            obstacle_.pose.orientation.x = 0.0;
+            obstacle_.pose.orientation.y = 0.0;
+            obstacle_.pose.orientation.z = 0.0;
+            obstacle_.pose.orientation.w = 1.0;
+            obstacle_.scale.x = 0.5;   // Diameter in x
+            obstacle_.scale.y = 0.5;   // Diameter in y
+            obstacle_.scale.z = 0.5;         // Height
+            obstacle_.color.r = 0.0f;
+            obstacle_.color.g = 1.0f;
+            obstacle_.color.b = 0.0f;
+            obstacle_.color.a = 1.0;
+
+            // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
+            obstacle_.lifetime.nanosec = 100000000; // 0.1sec
+            obstacles_.markers.push_back(obstacle_);
+
+            obstacles_person_publisher_->publish(obstacles_);
+      }
+
+      /// \brief Subscription callback function for /door object detection topic
+      void stairs_vision_callback(const geometry_msgs::msg::Point & msg)
+      {
+          x_stairs_ = msg.x;
+          z_stairs_ = msg.y;
+          y_stairs_ = msg.z;
+          // RCLCPP_INFO_STREAM(get_logger(), "Coords " << x_door_ << " "<<  z_door_ << " " << y_door_);  
+          create_stairs_obstacles_array();
+      }
+
+      /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
+      void create_stairs_obstacles_array()
+      {
+            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            visualization_msgs::msg::Marker obstacle_;
+            obstacle_.header.frame_id = "base_link";
+            obstacle_.header.stamp = get_clock()->now();
+            obstacle_.id = id_stairs_++;
+            obstacle_.type = visualization_msgs::msg::Marker::CUBE;
+            obstacle_.action = visualization_msgs::msg::Marker::ADD;
+            obstacle_.pose.position.x = x_stairs_;
+            obstacle_.pose.position.y = y_stairs_;
+            obstacle_.pose.position.z = z_stairs_;
+            obstacle_.pose.orientation.x = 0.0;
+            obstacle_.pose.orientation.y = 0.0;
+            obstacle_.pose.orientation.z = 0.0;
+            obstacle_.pose.orientation.w = 1.0;
+            obstacle_.scale.x = 0.5;   // Diameter in x
+            obstacle_.scale.y = 0.5;   // Diameter in y
+            obstacle_.scale.z = 0.5;         // Height
+            obstacle_.color.r = 0.0f;
+            obstacle_.color.g = 0.0f;
+            obstacle_.color.b = 1.0f;
+            obstacle_.color.a = 1.0;
+
+            // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
+            obstacle_.lifetime.nanosec = 100000000; // 0.1sec
+            obstacles_.markers.push_back(obstacle_);
+
+            obstacles_stairs_publisher_->publish(obstacles_);
+      }
+
+      /// \brief (Just for testing) Broadcast the TF frames of the robot
+      void broadcast_red_turtle()
+      {
+        geometry_msgs::msg::TransformStamped t_;
+
+        t_.header.stamp = get_clock()->now();
+        // t_.header.stamp.nanosec += 50000000; // TODO - Fixes the fake obstacle in Rviz
+        t_.header.frame_id = "map";
+        t_.child_frame_id = "base_link";
+        t_.transform.translation.x = 0.0;
+        t_.transform.translation.y = 0.0;
+        t_.transform.translation.z = 0.0;     // Turtle only exists in 2D
+
+        // Send the transformation
+        tf_broadcaster_->sendTransform(t_);
       }
 
       /// \brief Main simulation timer loop
