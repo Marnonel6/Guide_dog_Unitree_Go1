@@ -63,9 +63,6 @@ class vision_obstacles : public rclcpp::Node
         // Timer timestep [seconds]
         dt_ = 1.0 / static_cast<double>(rate);
 
-        // // Create obstacles
-        // create_obstacles_array();
-
         // Publishers
         timestep_publisher_ = create_publisher<std_msgs::msg::UInt64>("~/timestep", 10);
         obstacles_door_publisher_ =
@@ -115,7 +112,9 @@ class vision_obstacles : public rclcpp::Node
       double z_stairs_ = 0.0;
       int id_stairs_ = 0;
       double dt_ = 0.0; // Nusim Timer
-      visualization_msgs::msg::MarkerArray obstacles_;
+      visualization_msgs::msg::MarkerArray obstacles_door_;
+      visualization_msgs::msg::MarkerArray obstacles_person_;
+      visualization_msgs::msg::MarkerArray obstacles_stairs_;
 
       // Create objects
       rclcpp::TimerBase::SharedPtr timer_;
@@ -141,7 +140,7 @@ class vision_obstacles : public rclcpp::Node
       /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
       void create_door_obstacles_array()
       {
-            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            obstacles_door_ = visualization_msgs::msg::MarkerArray{};
             visualization_msgs::msg::Marker obstacle_;
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
@@ -156,8 +155,8 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.pose.orientation.z = 0.0;
             obstacle_.pose.orientation.w = 1.0;
             obstacle_.scale.x = 0.5;   // Diameter in x
-            obstacle_.scale.y = 0.5;   // Diameter in y
-            obstacle_.scale.z = 0.5;         // Height
+            obstacle_.scale.y = 0.1;   // Diameter in y
+            obstacle_.scale.z = 2.0;         // Height
             obstacle_.color.r = 1.0f;
             obstacle_.color.g = 0.0f;
             obstacle_.color.b = 0.0f;
@@ -165,9 +164,9 @@ class vision_obstacles : public rclcpp::Node
 
             // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
             obstacle_.lifetime.nanosec = 100000000; // 0.1sec
-            obstacles_.markers.push_back(obstacle_);
+            obstacles_door_.markers.push_back(obstacle_);
 
-            obstacles_door_publisher_->publish(obstacles_);
+            obstacles_door_publisher_->publish(obstacles_door_);
       }
 
       /// \brief Subscription callback function for /door object detection topic
@@ -183,7 +182,7 @@ class vision_obstacles : public rclcpp::Node
       /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
       void create_person_obstacles_array()
       {
-            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            obstacles_person_ = visualization_msgs::msg::MarkerArray{};
             visualization_msgs::msg::Marker obstacle_;
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
@@ -197,9 +196,9 @@ class vision_obstacles : public rclcpp::Node
             obstacle_.pose.orientation.y = 0.0;
             obstacle_.pose.orientation.z = 0.0;
             obstacle_.pose.orientation.w = 1.0;
-            obstacle_.scale.x = 0.5;   // Diameter in x
-            obstacle_.scale.y = 0.5;   // Diameter in y
-            obstacle_.scale.z = 0.5;         // Height
+            obstacle_.scale.x = 0.4;   // Diameter in x
+            obstacle_.scale.y = 0.4;   // Diameter in y
+            obstacle_.scale.z = 1.8;         // Height
             obstacle_.color.r = 0.0f;
             obstacle_.color.g = 1.0f;
             obstacle_.color.b = 0.0f;
@@ -207,9 +206,9 @@ class vision_obstacles : public rclcpp::Node
 
             // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
             obstacle_.lifetime.nanosec = 100000000; // 0.1sec
-            obstacles_.markers.push_back(obstacle_);
+            obstacles_person_.markers.push_back(obstacle_);
 
-            obstacles_person_publisher_->publish(obstacles_);
+            obstacles_person_publisher_->publish(obstacles_person_);
       }
 
       /// \brief Subscription callback function for /door object detection topic
@@ -225,7 +224,7 @@ class vision_obstacles : public rclcpp::Node
       /// \brief Create obstacles as a MarkerArray and publish them to a topic to display them in Rviz
       void create_stairs_obstacles_array()
       {
-            obstacles_ = visualization_msgs::msg::MarkerArray{};
+            obstacles_stairs_ = visualization_msgs::msg::MarkerArray{};
             visualization_msgs::msg::Marker obstacle_;
             obstacle_.header.frame_id = "base_link";
             obstacle_.header.stamp = get_clock()->now();
@@ -249,9 +248,9 @@ class vision_obstacles : public rclcpp::Node
 
             // obstacle_.lifetime.sec = 2; // Obstacle will stay in rviz for 2 seconds after last received location
             obstacle_.lifetime.nanosec = 100000000; // 0.1sec
-            obstacles_.markers.push_back(obstacle_);
+            obstacles_stairs_.markers.push_back(obstacle_);
 
-            obstacles_stairs_publisher_->publish(obstacles_);
+            obstacles_stairs_publisher_->publish(obstacles_stairs_);
       }
 
       /// \brief (Just for testing) Broadcast the TF frames of the robot
