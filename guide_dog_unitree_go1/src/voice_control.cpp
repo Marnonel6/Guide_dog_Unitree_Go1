@@ -53,7 +53,7 @@ public:
             this, std::placeholders::_1));
 
         //Services
-        stand_up_client_ = create_client<std_srvs::srv::Empty>("stand_up");
+        stand_up_client_ = create_client<std_srvs::srv::Empty>("recover_stand");
         lay_down_client_ = create_client<std_srvs::srv::Empty>("lay_down");
     }
 
