@@ -30,6 +30,13 @@ def generate_launch_description():
             description='Enables voice to text commands and audio playback from unitree Go1'
         ),
 
+        DeclareLaunchArgument(
+            name='use_object_detection',
+            default_value='false',
+            choices=['true','false'],
+            description='Enables object detection with YOLOv7 on a realsense'
+        ),
+
         Node(
             package='guide_dog_unitree_go1',
             executable='voice_control',
@@ -41,7 +48,6 @@ def generate_launch_description():
             PythonLaunchDescriptionSource(
                 PathJoinSubstitution([
                     FindPackageShare('listen_talk_ros2'),
-                    # 'launch',
                     'listen_talk.launch.py'
                 ])
             ),
@@ -57,5 +63,16 @@ def generate_launch_description():
                 ])
             ),
             condition=IfCondition(LaunchConfiguration('use_nav2')),
+        ),
+
+        IncludeLaunchDescription(
+            PythonLaunchDescriptionSource(
+                PathJoinSubstitution([
+                    FindPackageShare('guide_dog_unitree_go1'),
+                    'launch',
+                    'vision.launch.xml'
+                ])
+            ),
+            condition=IfCondition(LaunchConfiguration('use_object_recognition')),
         ),
     ])
