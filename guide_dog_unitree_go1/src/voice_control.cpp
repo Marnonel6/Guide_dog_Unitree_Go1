@@ -76,7 +76,7 @@ private:
     {
         RCLCPP_ERROR_STREAM(get_logger(), "\n Command \n" << msg.data);
 
-        if (msg.data == "stand") // CHANGE TO UP ON NEW RHINO FILE DOWNLOAD
+        if (msg.data == "stand" || msg.data == "up")
         {
             auto result_future_stand = stand_up_client_->async_send_request(
                 std::make_shared<std_srvs::srv::Empty::Request>(), std::bind(&voice_control::response_callback_stand, this,
@@ -90,9 +90,25 @@ private:
         }
         else if (msg.data == "walk")
         {
+            // TODO ADD GO TO GOAL SERVICE CALL
             body_twist_.linear.x = 0.4;
             body_twist_.angular.z = 0.0;
             cmd_vel_publisher_->publish(body_twist_);
+        }
+        else if (msg.data == "stop")
+        {
+            // TODO ADD CANCEL GOAL SERVICE CALL!!!
+            body_twist_.linear.x = 0.0;
+            body_twist_.angular.z = 0.0;
+            cmd_vel_publisher_->publish(body_twist_);
+        }
+        else if (msg.data == "pet")
+        {
+            // TODO ADD RPY SERVICE call!!
+        }
+        else if (msg.data == "tail")
+        {
+            // TODO ADD RPY SERVICE call to wagg tail
         }
     }
 
