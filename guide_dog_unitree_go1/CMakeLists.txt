@@ -52,10 +52,13 @@ add_executable(voice_control src/voice_control.cpp)
 ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav_msgs sensor_msgs geometry_msgs)
 add_executable(vision_obstacles src/vision_obstacles.cpp)
 ament_target_dependencies(vision_obstacles rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs nav_msgs sensor_msgs)
+add_executable(guide_dog src/guide_dog.cpp)
+ament_target_dependencies(guide_dog rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs nav_msgs sensor_msgs)
 
 install(TARGETS
   voice_control
   vision_obstacles
+  guide_dog
   DESTINATION lib/${PROJECT_NAME}
 )
 
