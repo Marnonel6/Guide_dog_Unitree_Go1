@@ -31,6 +31,8 @@ class Talk(Node):
         # Load .mp3 files from the shared directory as parameters
         self.declare_parameter("bark", ament_index_python.get_package_share_directory(
             "listen_talk_ros2") + "/German_shepherd_barking.mp3")
+        self.declare_parameter("talk", ament_index_python.get_package_share_directory(
+            "listen_talk_ros2") + "/talk.mp3")
         self.declare_parameter("allan", ament_index_python.get_package_share_directory(
             "listen_talk_ros2") + "/allan.mp3")
         self.declare_parameter("easter_egg", ament_index_python.get_package_share_directory(
@@ -41,11 +43,13 @@ class Talk(Node):
             "listen_talk_ros2") + "/willie_greet.mp3")
 
         self.bark = self.get_parameter("bark").get_parameter_value().string_value
+        self.talk = self.get_parameter("talk").get_parameter_value().string_value
         self.allan = self.get_parameter("allan").get_parameter_value().string_value
         self.easter_egg = self.get_parameter("easter_egg").get_parameter_value().string_value
         self.not_understanding = self.get_parameter("not_understanding").get_parameter_value().string_value
         self.willie_greet = self.get_parameter("willie_greet").get_parameter_value().string_value
 
+        self.bark_Flag = 0
 
         # Publishers, Subscribers, Services and Timer
         self.sub = self.create_subscription(String, "/voice_command", self.voice_command, 10)
@@ -55,9 +59,14 @@ class Talk(Node):
         Subscribtion topic: /voice_command
         """
 
-        if data.data == "bark":
+        if data.data == "bark" and self.bark_Flag == 0:
             bark = 'mpg123' + ' ' + self.bark
+            self.bark_Flag = 1
             os.system(bark)
+        elif data.data == "bark" and self.bark_Flag == 1:
+            talk = 'mpg123' + ' ' + self.talk
+            self.bark_Flag = 0
+            os.system(talk)
 
         if data.data == "allan":
             allan = 'mpg123' + ' ' + self.allan
