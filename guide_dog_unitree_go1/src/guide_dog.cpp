@@ -217,16 +217,24 @@ private:
             {
                 if (one_ == 0)
                 {
-                    goal_pose_.x = 1.0;
-                    goal_pose_.y = -1.0;
+                    goal_pose_.x = -0.6;
+                    goal_pose_.y = -1.8;
                     goal_pose_.theta = -1.0;
                     one_ = 1;
+                    state_next_ = State::SEND_GOAL;
+                }
+                else if (one_ == 1)
+                {
+                    goal_pose_.x = 0.5;
+                    goal_pose_.y = 1.0;
+                    goal_pose_.theta = 1.0;
+                    one_ = 0;
                     state_next_ = State::SEND_GOAL;
                 }
             }
         }
         // else if (msg.data == "stop")
-        else if (msg.data != "walk")
+        else if (msg.data != "walk") // While walking if you hear anything from voice command STOP
         {
             // Cancel goal service
             RCLCPP_INFO_STREAM(get_logger(), "Cancelling navigation.");
