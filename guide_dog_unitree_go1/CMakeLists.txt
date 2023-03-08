@@ -20,6 +20,12 @@ find_package(rosidl_default_generators REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(visualization_msgs REQUIRED)
+find_package(unitree_nav_interfaces REQUIRED)
+find_package(rclcpp_action REQUIRED)
+find_package(tf2_geometry_msgs REQUIRED)
+find_package(nav2_msgs REQUIRED)
+find_package(ros2_unitree_legged_msgs REQUIRED)
+
 
 
 if(NOT CMAKE_CROSSCOMPILING)
@@ -53,7 +59,8 @@ ament_target_dependencies(voice_control rclcpp std_msgs std_srvs tf2 tf2_ros nav
 add_executable(vision_obstacles src/vision_obstacles.cpp)
 ament_target_dependencies(vision_obstacles rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs nav_msgs sensor_msgs)
 add_executable(guide_dog src/guide_dog.cpp)
-ament_target_dependencies(guide_dog rclcpp std_msgs std_srvs tf2 tf2_ros visualization_msgs nav_msgs sensor_msgs)
+ament_target_dependencies(guide_dog rclcpp rclcpp_action geometry_msgs std_msgs std_srvs tf2 tf2_ros tf2_geometry_msgs nav2_msgs visualization_msgs nav_msgs sensor_msgs unitree_nav_interfaces)
+
 
 install(TARGETS
   voice_control
