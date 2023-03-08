@@ -73,6 +73,6 @@ def generate_launch_description():
                     'vision.launch.xml'
                 ])
             ),
-            condition=IfCondition(LaunchConfiguration('use_object_recognition')),
+            condition=IfCondition(LaunchConfiguration('use_object_detection')),
         ),
     ])
