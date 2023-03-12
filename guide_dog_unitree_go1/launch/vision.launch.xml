@@ -1,11 +1,13 @@
 <launch>
 
-    <arg name="use_realsense" default="True" />
+    <arg name="use_realsense" default="False" />
+    <arg name="use_realsense_link" default="True" />
+    <arg name="use_YOLOv7" default="True" />
 
     <!-- Static transform publisher between base_link and realsense tf frames -->
     <node pkg="tf2_ros" exec="static_transform_publisher" name="base_link_to_camera_link"
           args="0.25 0 0.1 0 0 0 /base_link /camera_link"
-          if="$(eval '\'$(var use_realsense)\' == \'True\'')"/>
+          if="$(eval '\'$(var use_realsense_link)\' == \'True\'')"/>
 
     <!-- Launch the Python launch file with the green (SLAM) robot -->
     <include file="$(find-pkg-share object_detection)/object_detection.launch.xml"/>

@@ -215,22 +215,57 @@ private:
         {
             if (state_ == State::IDLE)
             {
+                // MSR space
+                // if (one_ == 0)
+                // {
+                //     goal_pose_.x = -0.6;
+                //     goal_pose_.y = -1.8;
+                //     goal_pose_.theta = -1.0;
+                //     one_ = 1;
+                //     state_next_ = State::SEND_GOAL;
+                // }
+                // else if (one_ == 1)
+                // {
+                //     goal_pose_.x = 0.5;
+                //     goal_pose_.y = 1.0;
+                //     goal_pose_.theta = 1.0;
+                //     one_ = 0;
+                //     state_next_ = State::SEND_GOAL;
+                // }
+
+                // Atrium space
                 if (one_ == 0)
                 {
-                    goal_pose_.x = -0.6;
-                    goal_pose_.y = -1.8;
-                    goal_pose_.theta = -1.0;
+                    goal_pose_.x = 2.5;
+                    goal_pose_.y = 0.0;
+                    goal_pose_.theta = 1.57;
                     one_ = 1;
                     state_next_ = State::SEND_GOAL;
                 }
                 else if (one_ == 1)
                 {
-                    goal_pose_.x = 0.5;
+                    goal_pose_.x = 2.5;
+                    goal_pose_.y = -2.0;
+                    goal_pose_.theta = -1.57;
+                    one_ = 2;
+                    state_next_ = State::SEND_GOAL;
+                }
+                else if (one_ == 2)
+                {
+                    goal_pose_.x = 0.0;
                     goal_pose_.y = 1.0;
-                    goal_pose_.theta = 1.0;
+                    goal_pose_.theta = 2.35;
                     one_ = 0;
                     state_next_ = State::SEND_GOAL;
                 }
+                // else if (one_ == 3)
+                // {
+                //     goal_pose_.x = 0.5;
+                //     goal_pose_.y = 1.0;
+                //     goal_pose_.theta = 1.0;
+                //     one_ = 2;
+                //     state_next_ = State::SEND_GOAL;
+                // }
             }
         }
         // else if (msg.data == "stop")
