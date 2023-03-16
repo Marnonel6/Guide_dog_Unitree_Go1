@@ -10,24 +10,24 @@
 #
 
 """
-Resets turtlesim and then allows user to load an arbritary amount of waypoints. The waypoints are then plotted using the turtle and a control algorithm is 
-initiated to pubslish the twist and move the turtle through all the waypoints and back to the start.
-
+Voice recognition node. Uses picovoice to listen for a wake word (Hey Willie), then start listening for pretrained phrases to preform an action.
+The desired action is then published to a voice command topic.
 
 PUBLISHERS:
-    + turtle1/cmd_vel (Twist) - Linear and angular velocity to move the turtle forward and change its heading towards the waypoint.
+    + voice_command (String) - The desired voice command action is published to a voice command topic.
 
 SUBSCRIBERS:
-    + turtle1/pose (Pose) - The position, orientation and velocity of the current turtle. This is used in the control algorithm to move the turtle through the waypoints list.
+    + None
 
 SERVICES:
-    + toggle (Empty) - Changes the state of the system from ANY state to STOPPED or from STOPPED to MOVING
-    + load (Waypoints) - Load an arbritary amount of waypoints
+    + None
 
 PARAMETERS:
     + frequency (double) - Sets the frequency of the timer, thus controlling the timer_callback function speed.
-    + tolerance (double) - This is the maximum relative distance error that the turtle must have to verify that a waypoint was reached and thus the turtle can move to the next waypoint. 
-
+    + use_jetson_nano (bool) - Choose to run the program on a Jetson nanon or a linux laptop.
+    + access_key (string) - Picovoice API key.
+    + keyword_path (string) - .ppn (Porcupine) file for the wake word from Picovoice
+    + context_path (string) - .rhn (Rhino) file for the pretrained voice recognition commands from Picovoice.
 
 """
 
@@ -62,18 +62,16 @@ class PicovoiceDemo(Thread):
 
 
 class Listen(Node):
-    """
-    """
+    """Speech recognition node."""
 
     def __init__(self):
         super().__init__("listen")
 
-        # self.state = State.RESET # Starts with RESET state
         self.flag_state_stopped = 0 # This is used to log "STOPPING" only once to debug.
 
         self.declare_parameter("use_jetson_nano", True, ParameterDescriptor(description="Run program on jetson nano, otherwise is linux computer"))
         self.declare_parameter("frequency", 100.0, ParameterDescriptor(description="Timer callback frequency"))
-        self.declare_parameter("access_key", "bz3cScyGLZpi/dcR5/xHDJJ/pCBdswpMGXHL2Djgik7Rn04q54tdYA==", ParameterDescriptor(description="The error tolerance for the waypoint"))
+        self.declare_parameter("access_key", "bz3cScyGLZpi/dcR5/xHDJJ/pCBdswpMGXHL2Djgik7Rn04q54tdYA==", ParameterDescriptor(description="Picovoice API key"))
 
         self.use_jetson_nano = self.get_parameter("use_jetson_nano").get_parameter_value().bool_value
         self.frequency = self.get_parameter("frequency").get_parameter_value().double_value

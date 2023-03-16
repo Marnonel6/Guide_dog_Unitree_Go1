@@ -12,6 +12,11 @@ SERVICES:
 
 PARAMETERS:
     + bark (string) - Audio file of a German sheperd barking.
+    + talk (string) - Audio file of a person saying 'Woof'
+    + allan (string) - Audio file of the soundtrack allan.
+    + easter_egg (string) - Easter egg audio file.
+    + not_understanding (string) - Audio file for when the voice recognition does not understand.
+    + willie_greet (string) - Audio file for greeting upon wake up.
 
 """
 
@@ -51,7 +56,7 @@ class Talk(Node):
 
         self.bark_Flag = 0
 
-        # Publishers, Subscribers, Services and Timer
+        # Subscribers
         self.sub = self.create_subscription(String, "/voice_command", self.voice_command, 10)
 
     def voice_command(self,data):
