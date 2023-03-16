@@ -1,3 +1,4 @@
+# MIT License
 """
 Loads prewritten .mp3 files and play's it back over speakers.
 

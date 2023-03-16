@@ -1,15 +1,21 @@
 /// \file
-/// \brief
+/// \brief Voice control node that subscribes to the voice command topic and preforms an action
+///        depending on the topic.
 ///
 /// PARAMETERS:
 ///
 /// PUBLISHES:
+///     \param cmd_vel (geometry_msgs::msg::Twist): Publishes to /cmd_vel to move the robot
 ///
 /// SUBSCRIBES:
+///     \param voice_command (std_msgs::msg::String): Subscribes to the topic and preforms an action
+///                                                   depending on the topic
 ///
 /// SERVERS:
 ///
 /// CLIENTS:
+///     \param recover_stand (std_srvs::srv::Empty): Sets Go1 in a stable recovered stand pose
+///     \param lay_down (std_srvs::srv::Empty): Makes Go1 lay down
 ///
 /// BROADCASTERS:
 
@@ -31,9 +37,12 @@
 
 using namespace std::chrono_literals;
 
-/// \brief Description
+/// \brief Voice control node that subscribes to the voice command topic and preforms an action
+///        depending on the topic.
 ///
-///  \param Name (Type): <definition>
+///  \param body_twist_ (geometry_msgs::msg::Twist): Desired body twist
+///  \param service_done_lay_ (bool): Flag for service client
+///  \param service_done_stand_ (bool): Flag for service client
 
 
 class voice_control : public rclcpp::Node
@@ -59,10 +68,9 @@ public:
 
 private:
     // Variables
-    bool service_done_stand_ = false; // inspired from action client c++ code
-    bool service_done_lay_ = false; // inspired from action client c++ code
+    bool service_done_stand_ = false;
+    bool service_done_lay_ = false;
     geometry_msgs::msg::Twist body_twist_;
-    // auto request = std::make_shared<std_srvs::srv::SetBool::Request>();
 
     // Create objects
     rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr cmd_vel_publisher_;
@@ -88,28 +96,6 @@ private:
                 std::make_shared<std_srvs::srv::Empty::Request>(), std::bind(&voice_control::response_callback_lay, this,
                                    std::placeholders::_1));
         }
-        else if (msg.data == "walk")
-        {
-            // TODO ADD GO TO GOAL SERVICE CALL
-            body_twist_.linear.x = 0.4;
-            body_twist_.angular.z = 0.0;
-            cmd_vel_publisher_->publish(body_twist_);
-        }
-        else if (msg.data == "stop")
-        {
-            // TODO ADD CANCEL GOAL SERVICE CALL!!!
-            body_twist_.linear.x = 0.0;
-            body_twist_.angular.z = 0.0;
-            cmd_vel_publisher_->publish(body_twist_);
-        }
-        else if (msg.data == "pet")
-        {
-            // TODO ADD RPY SERVICE call!!
-        }
-        else if (msg.data == "tail")
-        {
-            // TODO ADD RPY SERVICE call to wagg tail
-        }
     }
 
 
@@ -117,11 +103,7 @@ private:
         rclcpp::Client<std_srvs::srv::Empty>::SharedFuture future) {
             auto status = future.wait_for(1s);
             if (status == std::future_status::ready) {
-                // uncomment below line if using Empty() message
                 RCLCPP_ERROR_STREAM(get_logger(), "Result: success");
-                // comment below line if using Empty() message
-                //  RCLCPP_INFO(this->get_logger(), "Result: success: %i, message: %s",
-                //              future.get()->success, future.get()->message.c_str());
                  service_done_stand_ = true;
             } 
             else {
@@ -133,11 +115,7 @@ private:
         rclcpp::Client<std_srvs::srv::Empty>::SharedFuture future) {
             auto status = future.wait_for(1s);
             if (status == std::future_status::ready) {
-                // uncomment below line if using Empty() message
                 RCLCPP_ERROR_STREAM(get_logger(), "Result: success");
-                // comment below line if using Empty() message
-                //  RCLCPP_INFO(this->get_logger(), "Result: success: %i, message: %s",
-                //              future.get()->success, future.get()->message.c_str());
                  service_done_lay_ = true;
             } 
             else {

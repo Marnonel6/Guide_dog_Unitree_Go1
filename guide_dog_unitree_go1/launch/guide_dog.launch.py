@@ -18,7 +18,7 @@ def generate_launch_description():
 
         DeclareLaunchArgument(
             name='use_voice_control',
-            default_value='true',
+            default_value='false',
             choices=['true','false'],
             description='Enables voice control of unitree Go1'
         ),

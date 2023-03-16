@@ -1,5 +1,32 @@
-//This node is an example for working with the Nav2 to stack to command
-//the Unitree Go1 to a certain pose in the map.
+// Adapted from Nick Morales
+/// \file
+/// \brief Navigate the Unitree Go1 to a certain pose in the map. Subscribing to the voice_command.
+///
+/// PARAMETERS:
+///     \param param (std::string): The frame in which poses are sent.
+///
+/// PUBLISHES:
+///     \param ~/doors (visualization_msgs::msg::MarkerArray): Publishes a marker array in Rviz where
+///                                                            the object is relative to the camera
+///     \param ~/people (visualization_msgs::msg::MarkerArray): Publishes a marker array in Rviz where
+///                                                            the object is relative to the camera
+///     \param ~/stairs (visualization_msgs::msg::MarkerArray): Publishes a marker array in Rviz where
+///                                                            the object is relative to the camera
+///
+/// SUBSCRIBES:
+///     \param voice_command (std_msgs::msg::String): Voice command that needs to be preformed
+///
+/// SERVERS:
+///     \param unitree_nav_to_pose (unitree_nav_interfaces::srv::NavToPose): Navigate to a specified
+///                                                                          pose with NAV2 in the map
+///     \param unitree_cancel_nav (std_srvs::srv::Empty): Cancel the current goal pose in NAV2
+///
+/// CLIENTS:
+///     \param navigate_to_pose (nav2_msgs::action::NavigateToPose): NAV2 action client to navigate
+///                                                                  to a specified pose
+///
+/// BROADCASTERS:
+
 
 #include <exception>
 #include <vector>
@@ -54,6 +81,9 @@ geometry_msgs::msg::Quaternion rpy_to_quaternion(double roll, double pitch, doub
 
 using namespace std::chrono_literals;
 
+/// \file
+/// \brief Navigate the Unitree Go1 to a certain pose in the map. Subscribing to the voice_command.
+
 class guide_dog : public rclcpp::Node
 {
 public:
@@ -91,9 +121,6 @@ public:
       std::bind(&guide_dog::cancel_nav_callback, this,
                 std::placeholders::_1, std::placeholders::_2)
     );
-
-    //Service Clients
-    // cancel_goal_client_ = create_client<unitree_nav_interfaces::srv::SetBodyRPY>("set_body_rpy");
 
     //Action Clients
     act_nav_to_pose_ = rclcpp_action::create_client<nav2_msgs::action::NavigateToPose>(
@@ -177,7 +204,6 @@ private:
       }
       case State::WAIT_FOR_GOAL_RESPONSE:
       {
-        //TODO add timeout
         if (goal_response_received_) {
           if (goal_handle_) {
             RCLCPP_INFO(get_logger(), "Goal accepted by server, waiting for result");
@@ -215,23 +241,6 @@ private:
         {
             if (state_ == State::IDLE)
             {
-                // MSR space
-                // if (one_ == 0)
-                // {
-                //     goal_pose_.x = -0.6;
-                //     goal_pose_.y = -1.8;
-                //     goal_pose_.theta = -1.0;
-                //     one_ = 1;
-                //     state_next_ = State::SEND_GOAL;
-                // }
-                // else if (one_ == 1)
-                // {
-                //     goal_pose_.x = 0.5;
-                //     goal_pose_.y = 1.0;
-                //     goal_pose_.theta = 1.0;
-                //     one_ = 0;
-                //     state_next_ = State::SEND_GOAL;
-                // }
 
                 // Atrium space
                 if (one_ == 0)
@@ -258,17 +267,8 @@ private:
                     one_ = 0;
                     state_next_ = State::SEND_GOAL;
                 }
-                // else if (one_ == 3)
-                // {
-                //     goal_pose_.x = 0.5;
-                //     goal_pose_.y = 1.0;
-                //     goal_pose_.theta = 1.0;
-                //     one_ = 2;
-                //     state_next_ = State::SEND_GOAL;
-                // }
             }
         }
-        // else if (msg.data == "stop")
         else if (msg.data != "walk") // While walking if you hear anything from voice command STOP
         {
             // Cancel goal service
@@ -372,131 +372,3 @@ int main(int argc, char ** argv)
   rclcpp::shutdown();
   return 0;
 }
-
-
-
-
-
-
-
-
-// /// \file
-// /// \brief
-// ///
-// /// PARAMETERS:
-// ///
-// /// PUBLISHES:
-// ///
-// /// SUBSCRIBES:
-// ///
-// /// SERVERS:
-// ///
-// /// CLIENTS:
-// ///     None
-// ///
-// /// BROADCASTERS:
-
-// #include <chrono>
-// #include <functional>
-// #include <memory>
-// #include <string>
-// #include <random>
-
-// #include "rclcpp/rclcpp.hpp"
-// #include "std_msgs/msg/string.hpp"
-// #include "std_msgs/msg/u_int64.hpp"
-// #include "std_srvs/srv/empty.hpp"
-// #include "geometry_msgs/msg/transform_stamped.hpp"
-// #include "geometry_msgs/msg/point.hpp"
-// #include "tf2/LinearMath/Quaternion.h"
-// #include "tf2_ros/transform_broadcaster.h"
-// #include "unitree_nav_interfaces/srv/set_body_rpy.hpp"
-// #include "unitree_nav_interfaces/srv/nav_to_pose.hpp"
-// #include "unitree_nav_interfaces/srv/set_body_rpy.hpp"
-
-// using namespace std::chrono_literals;
-
-
-// /// \brief This class publishes the current timestep of the simulation, obstacles and walls that
-// ///#include "unitree_nav_interfaces/srv/nav_to_pose.hpp"
-// ///  \param rate (int): Timer callback frequency [Hz]
-
-
-// class guide_dog : public rclcpp::Node
-// {
-//     public:
-//       guide_dog()
-//       : Node("guide_dog"), timestep_(0)
-//       {
-//         // Parameter descirption
-//         auto rate_des = rcl_interfaces::msg::ParameterDescriptor{};
-//         rate_des.description = "Timer callback frequency [Hz]";
-
-//         // Declare default parameters values
-//         declare_parameter("rate", 200, rate_des);     // Hz for timer_callback
-
-//         // Get params - Read params from yaml file that is passed in the launch file
-//         int rate = get_parameter("rate").get_parameter_value().get<int>();
-
-//         // Publishers
-//         //Subscribers
-
-//         //Services
-//         nav_to_pose_client_ = create_client<unitree_nav_interfaces::srv::NavToPose>("unitree_nav_to_pose");
-//         setbodyrpy_client = create_client<unitree_nav_interfaces::srv::SetBodyRPY>("set_body_rpy");
-
-//         // Timer
-//         timer_ = create_wall_timer(
-//           std::chrono::milliseconds(1000 / rate),
-//           std::bind(&guide_dog::timer_callback, this));
-//       }
-
-//     private:
-//       // Variables
-//       size_t timestep_;
-//       int one_ = 0;
-//       std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
-
-//       // Create objects
-//       rclcpp::TimerBase::SharedPtr timer_;
-//       rclcpp::Client<unitree_nav_interfaces::srv::NavToPose>::SharedPtr nav_to_pose_client_;
-//       rclcpp::Client<unitree_nav_interfaces::srv::SetBodyRPY>::SharedPtr setbodyrpy_client;
-
-//       /// \brief Main simulation timer loop
-//       void timer_callback()
-//       {
-//         if (one_ == 0)
-//         {
-
-//             // auto request = std::make_shared<unitree_nav_interfaces::srv::SetBodyRPY::Request>();
-//             // request->roll = 0.0;
-//             // request->pitch = 0.3;
-//             // request->yaw = 0.0;
-//             // auto result = setbodyrpy_client->async_send_request(request);
-//             // one_ = 1;
-
-
-//             if (!nav_to_pose_client_->wait_for_service(5s))
-//             {
-//                 RCLCPP_ERROR_STREAM(get_logger(), "Ready\n");
-//                 auto request = std::make_shared<unitree_nav_interfaces::srv::NavToPose::Request>();
-//                 request->x = 0.5;
-//                 request->y = 0.5;
-//                 request->theta = 1.0;
-//                 auto result = nav_to_pose_client_->async_send_request(request);
-//                 one_ = 1;
-//             }
-
-//         }
-
-//       }
-// };
-
-// /// \brief Main function for node create, error handel and shutdown
-// int main(int argc, char * argv[])
-// {
-//   rclcpp::init(argc, argv);
-//   rclcpp::spin(std::make_shared<guide_dog>());
-//   rclcpp::shutdown();
-//   return 0;
-// }

@@ -1,7 +1,7 @@
 <launch>
 
-    <arg name="use_realsense" default="False" />
-    <arg name="use_realsense_link" default="True" />
+    <arg name="use_realsense" default="True" />
+    <arg name="use_realsense_link" default="False" />
     <arg name="use_YOLOv7" default="True" />
 
     <!-- Static transform publisher between base_link and realsense tf frames -->

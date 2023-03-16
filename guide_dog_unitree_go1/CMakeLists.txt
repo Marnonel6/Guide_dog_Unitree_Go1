@@ -26,21 +26,12 @@ find_package(tf2_geometry_msgs REQUIRED)
 find_package(nav2_msgs REQUIRED)
 find_package(ros2_unitree_legged_msgs REQUIRED)
 
-
-
 if(NOT CMAKE_CROSSCOMPILING)
     # CMake also has the ability to generate doxygen documentation
     find_package(Doxygen)
     set(DOXYGEN_USE_MDFILE_AS_MAINPAGE README.md) # Use the readme in your doxygen docs
     doxygen_add_docs(doxygen src/ README.md ALL)
 endif()
-
-# rosidl_generate_interfaces(${PROJECT_NAME}_srv
-#   "srv/Teleport.srv"
-#   LIBRARY_NAME ${PROJECT_NAME}
-# )
-
-# rosidl_get_typesupport_target(cpp_typesupport_target ${PROJECT_NAME}_srv "rosidl_typesupport_cpp")
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

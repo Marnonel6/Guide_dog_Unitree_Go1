@@ -1,6 +1,8 @@
 # listen_talk_ros2
 A ROS2 packages for speech recognition and text to speech audio.
 
+On-device voice assistant platform powered by deep learning 
+
 # Command line
 `ros2 launch listen_talk_ros2 listen_talk.launch.py` - Default uses jetson nano
 
@@ -14,3 +16,6 @@ Ensure that the `.ppn` and `.rhn` files are correct for your system. Add them to
 `ros2 run listen_talk_ros2 listen --ros-args -p use_jetson_nano:=False`
 # TO run on Jetson Nano
 `ros2 run listen_talk_ros2 listen --ros-args -p use_jetson_nano:=True` or `ros2 run listen_talk_ros2 listen` as it defaults to true.
+
+
+sudo pip3 install picovoice
