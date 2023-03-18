@@ -22,6 +22,14 @@ https://user-images.githubusercontent.com/60977336/226094090-aa75a276-06a2-4fda-
 # Voice recognition
 The use of the Picovoice deep learning voice recognition library has enabled the creation of a custom wake word "Hey Willie" and commands like walk, stop, stand up, lay down, bark, and increase or decrease speed. By implementing this library, the user is able to control the movements of Go1 with their voice while navigating around. A ROS2 C++ and Python package was developed to hadle the voice recognition and translate the voice commands to desired controls. I utilized gTTS (Google Text-to-Speech), a Python library that generates text to speech audio files. I generate audio files that Go1 uses to effectively communicate with the user. The package was deployed on a Nvidia Jetson Nano on Go1.
 
+# Packages used:
+- [Voice recognition](https://github.com/Marnonel6/Guide_dog_Unitree_Go1/tree/main/listen_talk_ros2)
+- [Object detection - YOLOv7](https://github.com/Marnonel6/YOLOv7_ROS2)
+- [Unitree navigation](https://github.com/Marnonel6/unitree_nav/tree/guide_dog)
+- [Unitree ROS 2](https://github.com/katie-hughes/unitree_ros2/tree/main)
+- [Lidar ROS 2 SDK](https://github.com/Marnonel6/rslidar_sdk_ros2)
+- [Lidar msg](https://github.com/RoboSense-LiDAR/rslidar_msg)
+
 
 ## Significant people who contributed to the project:
 The guide dog project was my own individual project, but some subsets of this project had collaborations with Nick Morales, Katie Hughes, Ava Zahedi and Rintaroh Shima. Thank you all for you contributions.
