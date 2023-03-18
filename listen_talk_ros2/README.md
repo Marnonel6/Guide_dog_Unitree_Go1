@@ -20,3 +20,7 @@ Ensure that the `.ppn` and `.rhn` files are correct for your system. Add them to
 # Dependencies
     sudo pip3 install picovoice
     sudo pip3 install gTTS
+
+# Demo video
+
+https://user-images.githubusercontent.com/60977336/226095385-699c7d70-c843-4602-816c-8e003dd0e82b.mp4
