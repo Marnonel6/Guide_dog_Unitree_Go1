@@ -5,6 +5,8 @@ To address these limitations, a I Programmed the Unitree Go1 quadruped robot dog
 
 Overall, this project represents an exciting advancement in assistive technology, providing a cost-effective and long-lasting alternative to traditional guide dogs. By combining the latest in robotics and machine learning, the Unitree Go1 robot dog has the potential to revolutionize the way visually impaired individuals navigate the world around them.
 
+- [Link to portfolio post for this project](https://marnonel6.github.io/projects/1-guidedog-unitreego1)
+
 Demo video:
 
 https://user-images.githubusercontent.com/60977336/226094090-aa75a276-06a2-4fda-96bf-263f29d1d173.mp4
