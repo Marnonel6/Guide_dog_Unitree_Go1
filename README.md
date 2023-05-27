@@ -15,7 +15,8 @@ https://user-images.githubusercontent.com/60977336/226094090-aa75a276-06a2-4fda-
 # Main launch file on external computer:
 `guide_dog.launch.py`:
 * This launches all the required nodes for Go1 to operate in guide dog mode.
-```ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_nav2:=true use_object_detection:=true
+```
+ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_nav2:=true use_object_detection:=true
 ```
 # Launch file on Go1:
 * This launches all the required nodes on Go1 to operate in guide dog mode.
