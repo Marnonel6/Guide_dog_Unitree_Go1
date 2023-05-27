@@ -15,11 +15,13 @@ https://user-images.githubusercontent.com/60977336/226094090-aa75a276-06a2-4fda-
 # Main launch file on external computer:
 `guide_dog.launch.py`:
 * This launches all the required nodes for Go1 to operate in guide dog mode.
-* `ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_nav2:=true use_object_detection:=true`
-
+```ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_nav2:=true use_object_detection:=true
+```
 # Launch file on Go1:
 * This launches all the required nodes on Go1 to operate in guide dog mode.
-* `ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_voice_control:=true use_speech_recognition:=true use_Go1_vision:=true`
+```
+ros2 launch guide_dog_unitree_go1 guide_dog.launch.py use_voice_control:=true use_speech_recognition:=true use_Go1_vision:=true
+```
 
 # Voice recognition
 The use of the Picovoice deep learning voice recognition library has enabled the creation of a custom wake word "Hey Willie" and commands like walk, stop, stand up, lay down, bark, and increase or decrease speed. By implementing this library, the user is able to control the movements of Go1 with their voice while navigating around. A ROS2 C++ and Python package was developed to hadle the voice recognition and translate the voice commands to desired controls. I utilized gTTS (Google Text-to-Speech), a Python library that generates text to speech audio files. I generate audio files that Go1 uses to effectively communicate with the user. The package was deployed on a Nvidia Jetson Nano on Go1.
@@ -33,8 +35,10 @@ The use of the Picovoice deep learning voice recognition library has enabled the
 - [Lidar msg](https://github.com/RoboSense-LiDAR/rslidar_msg)
 
 # Use [VCS tool](https://github.com/dirk-thomas/vcstool) to clone all the required packages:
-The vcs import command clones all repositories which are passed in via stdin in YAML format. Usually the data of a previously exported file is piped in:
-    vcs import < guide_dog.repos
+- The vcs import command clones all repositories of a previously exported file with the following command:
+```
+vcs import < guide_dog.repos
+```
 
 ## Significant people who contributed to the project:
 The guide dog project was my own individual project, but some subsets of this project had collaborations with Nick Morales, Katie Hughes, Ava Zahedi and Rintaroh Shima. Thank you all for you contributions.
