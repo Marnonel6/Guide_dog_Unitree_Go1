@@ -32,6 +32,9 @@ The use of the Picovoice deep learning voice recognition library has enabled the
 - [Lidar ROS 2 SDK](https://github.com/Marnonel6/rslidar_sdk_ros2)
 - [Lidar msg](https://github.com/RoboSense-LiDAR/rslidar_msg)
 
+# Use [VCS tool](https://github.com/dirk-thomas/vcstool) to clone all the required packages:
+The vcs import command clones all repositories which are passed in via stdin in YAML format. Usually the data of a previously exported file is piped in:
+    vcs import < guide_dog.repos
 
 ## Significant people who contributed to the project:
 The guide dog project was my own individual project, but some subsets of this project had collaborations with Nick Morales, Katie Hughes, Ava Zahedi and Rintaroh Shima. Thank you all for you contributions.
