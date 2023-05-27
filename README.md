@@ -61,7 +61,16 @@ mv Guide_dog_Unitree_Go1/guide_dog.repos guide_dog.repos
 ```
 vcs import < guide_dog.repos
 ```
-7) 
+7) Lidar_ROS_2_SDK contains a submodule rs_driver that needs to be downloaded:
+```
+cd rslidar_sdk_ros2/
+git submodule init
+git submodule update
+```
+8) Build package in workspace directory:
+```
+colcon build
+```
 
 ## Significant people who contributed to the project:
 The guide dog project was my own individual project, but some subsets of this project had collaborations with Nick Morales, Katie Hughes, Ava Zahedi and Rintaroh Shima. Thank you all for you contributions.
