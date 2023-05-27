@@ -40,6 +40,28 @@ The use of the Picovoice deep learning voice recognition library has enabled the
 ```
 vcs import < guide_dog.repos
 ```
+### Steps for setting up the guide dog workspace:
+1) Create a workspace:
+```
+mkdir -p ws/src
+```
+2) Go into source directory:
+```
+cd ws/src
+```
+4) Git clone the Guide_dog_Unitree_Go1 repository:
+```
+git clone <ssh:Guide_dog_Unitree_Go1 repository>
+```
+5) Move .repos folder into source directory:
+```
+mv Guide_dog_Unitree_Go1/guide_dog.repos guide_dog.repos
+```
+6) Use vcs tool to clone dependency repos:
+```
+vcs import < guide_dog.repos
+```
+7) 
 
 ## Significant people who contributed to the project:
 The guide dog project was my own individual project, but some subsets of this project had collaborations with Nick Morales, Katie Hughes, Ava Zahedi and Rintaroh Shima. Thank you all for you contributions.
