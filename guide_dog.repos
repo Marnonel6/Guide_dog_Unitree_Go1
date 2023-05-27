@@ -1,0 +1,25 @@
+repositories:
+  Guide_dog_Unitree_Go1:
+    type: git
+    url: git@github.com:Marnonel6/Guide_dog_Unitree_Go1.git
+    version: main
+  YOLOv7_ROS2:
+    type: git
+    url: git@github.com:Marnonel6/YOLOv7_ROS2.git
+    version: main
+  rslidar_msg:
+    type: git
+    url: git@github.com:RoboSense-LiDAR/rslidar_msg.git
+    version: master
+  rslidar_sdk_ros2:
+    type: git
+    url: git@github.com:Marnonel6/rslidar_sdk_ros2.git
+    version: unitree_go1
+  unitree_nav:
+    type: git
+    url: git@github.com:Marnonel6/unitree_nav.git
+    version: guide_dog
+  unitree_ros2:
+    type: git
+    url: git@github.com:katie-hughes/unitree_ros2.git
+    version: main
